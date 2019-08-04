@@ -94,21 +94,23 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
     open override func viewDidLoad() {
         super.viewDidLoad()
         
-        var bundle = Bundle(for: ButtonBarViewCell.self)
-        if let resourcePath = bundle.path(forResource: "XLPagerTabStrip", ofType: "bundle") {
-            if let resourcesBundle = Bundle(path: resourcePath) {
-                bundle = resourcesBundle
+        if buttonBarItemSpec == nil {
+            var bundle = Bundle(for: ButtonBarViewCell.self)
+            if let resourcePath = bundle.path(forResource: "XLPagerTabStrip", ofType: "bundle") {
+                if let resourcesBundle = Bundle(path: resourcePath) {
+                    bundle = resourcesBundle
+                }
             }
-        }
-        
-        buttonBarItemSpec = .nibFile(nibName: "ButtonCell", bundle: bundle, width: { [weak self] (childItemInfo) -> CGFloat in
+            
+            buttonBarItemSpec = .nibFile(nibName: "JCButtonCell", bundle: bundle, width: { [weak self] (childItemInfo) -> CGFloat in
                 let label = UILabel()
                 label.translatesAutoresizingMaskIntoConstraints = false
                 label.font = self?.settings.style.buttonBarItemFont
                 label.text = childItemInfo.title
                 let labelSize = label.intrinsicContentSize
                 return labelSize.width + (self?.settings.style.buttonBarItemLeftRightMargin ?? 8) * 2
-        })
+            })
+        }
 
         let buttonBarViewAux = buttonBarView ?? {
                 let flowLayout = UICollectionViewFlowLayout()
@@ -155,7 +157,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         case .nibFile(let nibName, let bundle, _):
             buttonBarView.register(UINib(nibName: nibName, bundle: bundle), forCellWithReuseIdentifier:"Cell")
         case .cellClass:
-            buttonBarView.register(ButtonBarViewCell.self, forCellWithReuseIdentifier:"Cell")
+            buttonBarView.register(JCButtonCell.self, forCellWithReuseIdentifier:"Cell")
         }
         //-
     }
@@ -306,7 +308,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
     }
 
     open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? ButtonBarViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? JCButtonCell else {
             fatalError("UICollectionViewCell should be or extend from ButtonBarViewCell")
         }
 
