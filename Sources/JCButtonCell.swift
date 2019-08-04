@@ -29,7 +29,7 @@ import UIKit
 
     @IBInspectable var cornerRadius: CGFloat = 0 {
         didSet {
-            self.countView.layer.cornerRadius = self.cornerRadius
+            self.countView?.layer.cornerRadius = self.cornerRadius
         }
     }
 
